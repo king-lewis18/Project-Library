@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    
+    <title>AOT</title>
+  </head>
+
+  <body>
+    <button id="new-book-btn">New Book</button>
+    
+    <form id="new-book-form" style="display: none;">
+      <label for="title">Title:</label>
+      <input type="text" name="title" id="title">
+
+      <label for="author">Author:</label>
+      <input type="text" name="author" id="author">
+
+      <label for="pages">Pages:</label>
+      <input type="text" name="pages" id="pages">
+
+      <label for="read">Read:</label>
+      <input type="checkbox" name="read" id="read">
+
+      <input type="submit" value="Add Book" id="submit">
+    </form> 
+
+    <div id="display"></div>
+
+  <script src="code.js"></script >
+  </body>     
+</html>
