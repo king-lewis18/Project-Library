@@ -1,4 +1,7 @@
-let myLibrary = [];
+
+
+let myLibrary = JSON.parse(localStorage.getItem("myLibrary")) || [];
+displayBooks();
 
 class Book {
  constructor (title, author, pages, read) {
@@ -17,7 +20,7 @@ function addBookToLibrary() {
     let read = document.querySelector("#read").checked;
     let newBook = new Book(title, author, pages, read);
     myLibrary.push(newBook); 
-    displayBooks ();
+   saveAndDisplay();
 }
 
 function displayBooks () {
@@ -35,6 +38,12 @@ function displayBooks () {
          `;
          displayContainer.appendChild(bookCard);
    });
+
+};
+
+function saveAndDisplay() {
+   localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+   displayBooks();
 }
 
 let newBookBtn = document.querySelector("#new-book-btn");
@@ -44,11 +53,85 @@ newBookBtn.addEventListener("click", function(event) {
 });
 
 document.querySelector("#new-book-form").addEventListener("submit", function(event) {
-   event.preventDefault();
-   addBookToLibrary();
+  event.preventDefault();
 
-   event.target.reset();
-   event.target.style.display = "none";
+    if (!validateInputs()) {
+        return; 
+    }
+
+    addBookToLibrary();
+    event.target.reset();
+    clearValidationState();
+    event.target.style.display = "none";
 })
+
+const form = document.getElementById("new-book-form");
+const author = document.getElementById("author");
+const titleInput = document.getElementById("title");
+
+const setError = (element, message) => {
+    const inputControl = element.parentElement;
+    const errorDisplay = inputControl.querySelector(".error");
+
+    errorDisplay.innerText = message;
+    inputControl.classList.add("error");
+    inputControl.classList.remove("success");
+};
+
+const setSuccess = (element) => {
+    const inputControl = element.parentElement;
+    const errorDisplay = inputControl.querySelector(".error");
+
+    errorDisplay.innerText = "";
+    inputControl.classList.add("success");
+    inputControl.classList.remove("error");
+};
+
+const clearValidationState = () => {
+    [author, titleInput].forEach((input) => {
+        const inputControl = input.parentElement;
+        const errorDisplay = inputControl.querySelector(".error");
+        errorDisplay.innerText = "";
+        inputControl.classList.remove("error", "success");
+    });
+};
+
+const validateTitle = () => {
+    const titleValue = titleInput.value.trim();
+    if (titleValue === "") {
+        setError(titleInput, "Book title required");
+        return false;
+    }
+    setSuccess(titleInput);
+    return true;
+};
+
+const validateAuthor = () => {
+    const authorValue = author.value.trim();
+    if (authorValue === "") {
+        setError(author, "Author's name required");
+        return false;
+    }
+    setSuccess(author);
+    return true;
+};
+
+const validateInputs = () => {
+    const isTitleValid = validateTitle();
+    const isAuthorValid = validateAuthor();
+    return isTitleValid && isAuthorValid;
+};
+
+titleInput.addEventListener("input", validateTitle);
+author.addEventListener("input", validateAuthor);
+
+newBookBtn.addEventListener("click", function () {
+    clearValidationState();
+    form.style.display = "flex";
+    titleInput.focus();
+});
+
+
+
 
 
